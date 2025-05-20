@@ -39,3 +39,48 @@ class Stack: #stack implementation using linked list
             values_list.append(current.value)
             current = current.next
         return values_list
+
+class TowerOfHanoi:
+    def __init__(self, num_disks=3):
+        self.num_disks = num_disks
+        self.moves = 0
+        self.tower_1 = Stack()
+        self.tower_2 = Stack()
+        self.tower_3 = Stack()
+        for i in range(num_disks, 0, -1):
+            self.tower_1.push(i)
+        self.towers = [self.tower_1, self.tower_2, self.tower_3]
+
+    def is_valid_move(self, from_tower, to_tower):
+        if self.towers[from_tower].peek() != None:
+            if self.towers[to_tower].is_empty() and not(self.towers[from_tower].is_empty()):
+                return True
+            elif (self.towers[to_tower].peek() > self.towers[from_tower].peek()):
+                return True
+            else: 
+                return False 
+        else:
+            return False
+
+    def move_disk(self, from_tower, to_tower):
+        if not(self.is_valid_move(from_tower, to_tower)):
+            return False
+        else:
+            value_to_move = self.towers[from_tower].peek()
+            self.towers[from_tower].pop()
+            self.towers[to_tower].push(value_to_move)
+            self.moves += 1
+            return True
+
+    def is_game_won(self): 
+        if self.num_disks > 0 and (self.tower_1.is_empty() and self.tower_2.is_empty()):
+            return True #no need to check if order of tower 3 is correct since other functions ensure correct gameplay
+        else:
+            return False
+
+
+    def get_tower_state(self, tower_index):
+        return self.towers[tower_index].get_all_values()
+
+    def get_move_count(self):
+        return self.moves
